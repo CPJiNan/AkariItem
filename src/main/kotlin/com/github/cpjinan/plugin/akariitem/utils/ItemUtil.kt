@@ -24,6 +24,7 @@ import taboolib.library.xseries.XMaterial
 import taboolib.module.nms.*
 import taboolib.platform.util.buildItem
 
+@Suppress("DEPRECATION")
 object ItemUtil {
     @JvmStatic
     fun getItemFromConfig(config: YamlConfiguration, path: String): ItemStack? {
