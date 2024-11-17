@@ -10,7 +10,6 @@ import taboolib.common.platform.command.CommandHeader
 import taboolib.common.platform.command.mainCommand
 import taboolib.expansion.createHelper
 import taboolib.module.lang.sendLang
-import taboolib.module.nms.getItemTag
 import taboolib.module.nms.itemTagReader
 import taboolib.platform.util.isAir
 
@@ -23,7 +22,7 @@ object NBTCommand {
 
         literal("info") {
             execute<ProxyCommandSender> { sender: ProxyCommandSender, _: CommandContext<ProxyCommandSender>, _: String ->
-                sender.castSafely<Player>().let {
+                sender.castSafely<Player>().let { it ->
                     val item = it?.itemInHand
                     if (item.isAir()) {
                         sender.sendLang("Air-In-Hand")
@@ -31,8 +30,8 @@ object NBTCommand {
                     }
 
                     sender.sendLang("NBT-Info")
-                    ItemUtil.getNBTInfo(item.getItemTag(), "  ").forEach {
-                        sender.sendMessage(it)
+                    ItemUtil.getNBTInfo(item).forEach { message ->
+                        sender.sendMessage(message)
                     }
                 }
             }

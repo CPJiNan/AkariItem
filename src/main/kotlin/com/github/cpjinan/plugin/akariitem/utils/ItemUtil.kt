@@ -176,31 +176,44 @@ object ItemUtil {
     }
 
     @JvmStatic
-    fun getNBTInfo(tag: ItemTag, indent: String = ""): List<String> {
-        val result = mutableListOf<String>()
-        tag.forEach { (key, value) ->
-            when (value) {
-                is ItemTag -> {
-                    result.add("$indent§7$key:")
-                    result.addAll(getNBTInfo(value, "$indent  "))
-                }
+    fun getNBTInfo(item: ItemStack): List<String> {
+        fun getItemTagValue(tag: ItemTag, indent: String = ""): List<String> {
+            val result = mutableListOf<String>()
+            tag.forEach { (key, value) ->
+                when (value) {
+                    is ItemTag -> {
+                        result.add("$indent§7$key§8:")
+                        result.addAll(getItemTagValue(value, "$indent  "))
+                    }
 
-                is ItemTagList -> {
-                    result.add("§7$indent$key§8:")
-                    value.forEach { v ->
-                        when (v.type) {
-                            ItemTagType.COMPOUND -> result.addAll(getNBTInfo(v.asCompound(), "$indent  "))
-                            else -> result.add("$indent  §f- §f$v")
+                    is ItemTagList -> {
+                        result.add("§7$indent$key§8:")
+                        value.forEach { v ->
+                            when (v.type) {
+                                ItemTagType.COMPOUND -> result.addAll(getItemTagValue(v.asCompound(), "$indent  "))
+                                else -> result.add("$indent  §f- §f$v")
+                            }
                         }
                     }
-                }
 
-                else -> result.add("$indent§7$key§8: §f$value")
+                    else -> result.add("$indent§7$key§8: §f$value")
+                }
+            }
+            return result
+        }
+        return getItemTagValue(item.getItemTag(), "  ")
+    }
+
+    @JvmStatic
+    fun getEnchantInfo(item: ItemStack): List<String> {
+        val result = mutableListOf<String>()
+        buildItem(item) {
+            enchants.forEach { (enchant, level) ->
+                result.add("  §7${enchant.name}§8: §f$level")
             }
         }
         return result
     }
-
 
     private fun ItemTagData.getValue(): Any = when (val data = unsafeData()) {
         is ItemTag -> data.entries.associate { it.key to it.value.getValue() }
