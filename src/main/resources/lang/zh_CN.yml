@@ -47,3 +47,10 @@ Lore-Clipboard-Clear: "&7已清空 Lore 剪贴板!"
 NBT-Info: "&8======== &f当前手中物品的 NBT &8========"
 NBT-Set: "&7已设置手中物品的 NBT 节点 &f{0} &7的值为 &f{1} &7！"
 NBT-Remove: "&7已移除手中物品的 NBT 节点 &f{0} &7！"
+
+# 无法破坏相关
+Unbreakable-True: "&7已设置手中物品为无法破坏."
+Unbreakable-False: "&7已移除手中物品无法破坏属性."
+
+# 附魔相关
+Enchant-Set: "&7已设置手中物品的 &f{0} &7附魔等级为 &f{1} &7."
