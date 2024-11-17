@@ -13,7 +13,7 @@ import taboolib.platform.util.giveItem
 import taboolib.platform.util.isAir
 
 @Suppress("DEPRECATION")
-@CommandHeader(name = "AkariItem", aliases = ["ai"])
+@CommandHeader(name = "AkariItem")
 object ItemCommand {
     @CommandBody
     val main = mainCommand {
