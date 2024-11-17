@@ -50,7 +50,7 @@ NBT-Remove: "&7已移除手中物品的 NBT 节点 &f{0} &7！"
 
 # 无法破坏相关
 Unbreakable-True: "&7已设置手中物品为无法破坏."
-Unbreakable-False: "&7已移除手中物品无法破坏属性."
+Unbreakable-False: "&7已移除手中物品的无法破坏."
 
 # 附魔相关
 Enchant-Set: "&7已设置手中物品的 &f{0} &7附魔等级为 &f{1} &7."

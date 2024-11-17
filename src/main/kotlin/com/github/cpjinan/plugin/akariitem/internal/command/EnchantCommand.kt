@@ -56,7 +56,7 @@ object EnchantCommand {
                     }
                 }.itemMeta
 
-                if (!silent) sender.sendLang("Enchant-Set", context["enchant"])
+                if (!silent) sender.sendLang("Enchant-Set", context["enchant"], context.int("level"))
             }
         }
     }
