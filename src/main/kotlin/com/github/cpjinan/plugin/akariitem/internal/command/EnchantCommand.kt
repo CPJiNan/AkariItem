@@ -17,7 +17,7 @@ object EnchantCommand {
     val main = mainCommand {
         createHelper()
 
-        dynamic("enchant").int("level") {
+        dynamic("enchant") { suggest { enchantList } }.int("level") {
             execute<ProxyCommandSender> { sender: ProxyCommandSender, context: CommandContext<ProxyCommandSender>, _: String ->
                 val item = sender.castSafely<Player>()?.itemInHand
                 if (item.isAir()) {
@@ -26,12 +26,12 @@ object EnchantCommand {
                 }
 
                 item.itemMeta = buildItem(item) {
-                    Enchantment.getByName(context["enchant"].parseEnchant())?.let {
+                    Enchantment.getByName(context["enchant"].getEnchantName())?.let {
                         enchants[it] = context.int("level")
                     }
                 }.itemMeta
 
-                sender.sendLang("Enchant-Set", context["enchant"])
+                sender.sendLang("Enchant-Set", context["enchant"], context.int("level"))
             }
         }.dynamic("options") {
             execute<ProxyCommandSender> { sender: ProxyCommandSender, context: CommandContext<ProxyCommandSender>, content: String ->
@@ -51,7 +51,7 @@ object EnchantCommand {
                 }
 
                 item.itemMeta = buildItem(item) {
-                    Enchantment.getByName(context["enchant"].parseEnchant())?.let {
+                    Enchantment.getByName(context["enchant"].getEnchantName())?.let {
                         enchants[it] = context.int("level")
                     }
                 }.itemMeta
@@ -61,7 +61,91 @@ object EnchantCommand {
         }
     }
 
-    private fun String.parseEnchant(): String {
+    val enchantList = listOf(
+        "水下速掘",
+        "节肢杀手",
+        "绑定诅咒",
+        "爆炸保护",
+        "引雷",
+        "深海探索者",
+        "效率",
+        "摔落保护",
+        "火焰附加",
+        "火焰保护",
+        "火矢",
+        "时运",
+        "冰霜行者",
+        "穿刺",
+        "无限",
+        "击退",
+        "抢夺",
+        "忠诚",
+        "海之眷顾",
+        "饵钓",
+        "经验修补",
+        "多重射击",
+        "穿透",
+        "力量",
+        "弹射物保护",
+        "保护",
+        "冲击",
+        "快速装填",
+        "水下呼吸",
+        "激流",
+        "锋利",
+        "精准采集",
+        "亡灵杀手",
+        "灵魂疾行",
+        "横扫之刃",
+        "迅捷潜行",
+        "荆棘",
+        "耐久",
+        "消失诅咒",
+        "AQUA_AFFINITY",
+        "BANE_OF_ARTHROPODS",
+        "BINDING_CURSE",
+        "BLAST_PROTECTION",
+        "BREACH",
+        "CHANNELING",
+        "DENSITY",
+        "DEPTH_STRIDER",
+        "EFFICIENCY",
+        "FEATHER_FALLING",
+        "FIRE_ASPECT",
+        "FIRE_PROTECTION",
+        "FLAME",
+        "FORTUNE",
+        "FROST_WALKER",
+        "IMPALING",
+        "INFINITY",
+        "KNOCKBACK",
+        "LOOTING",
+        "LOYALTY",
+        "LUCK_OF_THE_SEA",
+        "LURE",
+        "MENDING",
+        "MULTISHOT",
+        "PIERCING",
+        "POWER",
+        "PROJECTILE_PROTECTION",
+        "PROTECTION",
+        "PUNCH",
+        "QUICK_CHARGE",
+        "RESPIRATION",
+        "RIPTIDE",
+        "SHARPNESS",
+        "SILK_TOUCH",
+        "SMITE",
+        "SOUL_SPEED",
+        "SWEEPING_EDGE",
+        "SWIFT_SNEAK",
+        "THORNS",
+        "UNBREAKING",
+        "VANISHING_CURSE",
+        "WIND_BURST"
+    )
+
+    fun String.getEnchantName(): String {
         return when (this) {
             "水下速掘" -> "AQUA_AFFINITY"
             "节肢杀手" -> "BANE_OF_ARTHROPODS"
