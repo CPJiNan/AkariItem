@@ -1,6 +1,7 @@
 package com.github.cpjinan.plugin.akariitem.internal.command
 
 import com.github.cpjinan.plugin.akariitem.api.ItemAPI
+import com.github.cpjinan.plugin.akariitem.common.PluginConfig
 import com.github.cpjinan.plugin.akariitem.utils.CommandUtil
 import org.bukkit.entity.Player
 import taboolib.common.platform.ProxyCommandSender
@@ -183,6 +184,14 @@ object ItemCommand {
                 sender.sendMessage(
                     ItemAPI.getItemNames().joinToString(separator = "&7, ".colored()) { "&f${it}".colored() })
             }
+        }
+    }
+
+    @CommandBody
+    val reload = subCommand {
+        execute { sender: ProxyCommandSender, _: CommandContext<ProxyCommandSender>, _: String ->
+            PluginConfig.reloadConfig()
+            sender.sendLang("Plugin-Reloaded")
         }
     }
 }
