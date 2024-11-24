@@ -35,7 +35,7 @@ taboolib {
         }
     }
     version { taboolib = "6.2.0-beta36" }
-    relocate("ink.ptms.um", "com.github.cpjinan.plugin.akariartifact.um")
+    relocate("ink.ptms.um", "com.github.cpjinan.plugin.akariitem.um")
 }
 
 repositories {
