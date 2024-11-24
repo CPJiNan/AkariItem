@@ -7,10 +7,10 @@ import taboolib.common.platform.event.SubscribeEvent
 object MythicListener {
     @SubscribeEvent
     fun onMobDrop(event: MobDropLoadEvent) {
-        val (plugin, id) = event.dropName.split("@", limit = 2)
-
-        if (plugin.equals("akariitem", ignoreCase = true)) {
-            ItemAPI.getItem(id)?.let { item -> event.registerItem { item } }
+        event.dropName.split("@", limit = 2).takeIf { it.size == 2 }?.let {
+            if (it[0].equals("akariitem", ignoreCase = true)) {
+                ItemAPI.getItem(it[1])?.let { item -> event.registerItem { item } }
+            }
         }
     }
 }
