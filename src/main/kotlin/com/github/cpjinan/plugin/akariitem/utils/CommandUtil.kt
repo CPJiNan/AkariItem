@@ -28,6 +28,10 @@ object CommandUtil {
         return options
     }
 
+    /**
+     * 解析带有空格的命令参数
+     * @return 参数值
+     */
     fun parseContentAfterSpace(args: List<String>): String {
         var i = 0
         var content = ""
