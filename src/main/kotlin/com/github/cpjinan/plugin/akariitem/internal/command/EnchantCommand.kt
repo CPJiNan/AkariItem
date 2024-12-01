@@ -29,7 +29,8 @@ object EnchantCommand {
                 subCommands = arrayOf(
                     Command(
                         name = "info",
-                        info = "查看手中物品附魔"
+                        info = "查看手中物品附魔",
+                        command = "enchant info"
                     ),
                     Command(
                         name = "set",
@@ -37,7 +38,6 @@ object EnchantCommand {
                             CommandParameter(
                                 name = "enchant",
                                 description = "英文附魔名称 \\(可以使用 /enchant info 查看已附魔物品的附魔名称\\)"
-
                             ),
                             CommandParameter(
                                 name = "level",
