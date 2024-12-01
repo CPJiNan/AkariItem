@@ -50,6 +50,13 @@ object CommandUtil {
         return content
     }
 
+    /**
+     * 发送命令帮助
+     * @param plugin 插件名称
+     * @param version 插件版本
+     * @param mainCommand 主命令信息
+     * @param subCommand 子命令信息
+     */
     fun ProxyCommandSender.createHelper(
         plugin: String = pluginId,
         version: String = "v$pluginVersion",
