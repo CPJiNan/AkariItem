@@ -70,7 +70,7 @@ object CommandUtil {
         // 发送主命令信息
         " &7命令: &f/${mainCommand.getInfo()}".component().buildColored().sendTo(this)
 
-        sendMessage(" &7参数:".colored())
+        if (subCommands.isNotEmpty()) sendMessage(" &7参数:".colored())
 
         // 发送子命令信息
         subCommands.forEach { subCommand ->
