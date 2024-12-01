@@ -16,7 +16,7 @@ import taboolib.platform.util.giveItem
 import taboolib.platform.util.isAir
 
 @Suppress("DEPRECATION")
-@CommandHeader(name = "AkariItem")
+@CommandHeader(name = "AkariItem", aliases = ["aki"])
 object ItemCommand {
     @CommandBody
     val main = mainCommand {
@@ -24,6 +24,7 @@ object ItemCommand {
             sender.createHelper(
                 mainCommand = Command(
                     name = "akariitem",
+                    description = "&f命令别名&8: &7aki",
                     parameters = listOf(
                         CommandParameter("...", optional = true)
                     )
@@ -32,12 +33,19 @@ object ItemCommand {
                     Command(
                         name = "get",
                         parameters = listOf(
-                            CommandParameter("id"),
-                            CommandParameter("amount", optional = true),
+                            CommandParameter(
+                                name = "id",
+                                description = "物品 ID"
+                            ),
+                            CommandParameter(
+                                name = "amount",
+                                description = "获取数量",
+                                optional = true
+                            ),
                             CommandParameter(
                                 name = "options",
                                 optional = true,
-                                description = "&fsilent&8: &7不输出命令提示"
+                                description = "&f--silent&8: &7不输出命令提示"
                             )
                         ),
                         info = "获取物品"
@@ -45,13 +53,23 @@ object ItemCommand {
                     Command(
                         name = "give",
                         parameters = listOf(
-                            CommandParameter("player"),
-                            CommandParameter("id"),
-                            CommandParameter("amount", optional = true),
+                            CommandParameter(
+                                name = "player",
+                                description = "玩家名称"
+                            ),
+                            CommandParameter(
+                                name = "id",
+                                description = "物品 ID"
+                            ),
+                            CommandParameter(
+                                name = "amount",
+                                optional = true,
+                                description = "给予数量"
+                            ),
                             CommandParameter(
                                 name = "options",
                                 optional = true,
-                                description = "&fsilent&8: &7不输出命令提示"
+                                description = "&f--silent&8: &7不输出命令提示"
                             )
                         ),
                         info = "给予玩家物品"
@@ -59,15 +77,22 @@ object ItemCommand {
                     Command(
                         name = "save",
                         parameters = listOf(
-                            CommandParameter("id"),
-                            CommandParameter("path", optional = true),
+                            CommandParameter(
+                                name = "id",
+                                description = "物品 ID \\(留空则使用物品名\\)"
+                            ),
+                            CommandParameter(
+                                name = "path",
+                                optional = true,
+                                description = "保存路径 \\(留空则保存至 saveItems.yml\\)"
+                            ),
                             CommandParameter(
                                 name = "options",
                                 optional = true,
-                                description = "&fsilent&8: &7不输出命令提示"
+                                description = "&f--silent&8: &7不输出命令提示"
                             )
                         ),
-                        info = "存储手中物品"
+                        info = "保存手中物品到指定配置"
                     ),
                     Command(
                         name = "list",

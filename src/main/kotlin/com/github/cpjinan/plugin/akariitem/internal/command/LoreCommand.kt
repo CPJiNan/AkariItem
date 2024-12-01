@@ -1,11 +1,13 @@
 package com.github.cpjinan.plugin.akariitem.internal.command
 
 import com.github.cpjinan.plugin.akariitem.utils.CommandUtil
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.Command
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.CommandParameter
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.createHelper
 import org.bukkit.entity.Player
 import taboolib.common.platform.ProxyCommandSender
 import taboolib.common.platform.command.*
 import taboolib.common5.util.replace
-import taboolib.expansion.createHelper
 import taboolib.module.chat.colored
 import taboolib.module.lang.sendLang
 import taboolib.platform.util.isAir
@@ -19,7 +21,197 @@ object LoreCommand {
 
     @CommandBody
     val lore = mainCommand {
-        createHelper()
+        execute<ProxyCommandSender> { sender: ProxyCommandSender, _: CommandContext<ProxyCommandSender>, _: String ->
+            sender.createHelper(
+                mainCommand = Command(
+                    name = "loreedit",
+                    parameters = listOf(
+                        CommandParameter("...", optional = true)
+                    ),
+                    description = "&f命令别名&8: &7lore"
+                ),
+                subCommands = arrayOf(
+                    Command(
+                        name = "info",
+                        info = "查看手中物品 Lore",
+                        suggest = "/loreedit info"
+                    ),
+                    Command(
+                        name = "add",
+                        info = "为手中物品添加 Lore",
+                        parameters = listOf(
+                            CommandParameter(
+                                name = "lore",
+                                description = "Lore 内容"
+                            ),
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = "&f--silent&8: &7不输出命令提示"
+                            )
+                        )
+                    ),
+                    Command(
+                        name = "remove",
+                        info = "为手中物品删除 Lore",
+                        parameters = listOf(
+                            CommandParameter(
+                                name = "line",
+                                description = "要删除的 Lore 行数 \\(从 1 开始\\)"
+                            ),
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = "&f--silent&8: &7不输出命令提示"
+                            )
+                        )
+                    ),
+                    Command(
+                        name = "set",
+                        info = "为手中物品设置 Lore",
+                        parameters = listOf(
+                            CommandParameter(
+                                name = "line",
+                                description = "要修改的 Lore 行数 \\(从 1 开始\\)"
+                            ),
+                            CommandParameter(
+                                name = "lore",
+                                description = "Lore 内容"
+                            ),
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = "&f--silent&8: &7不输出命令提示"
+                            )
+                        )
+                    ),
+                    Command(
+                        name = "insert",
+                        info = "在指定行后面插入新的 Lore",
+                        parameters = listOf(
+                            CommandParameter(
+                                name = "line",
+                                description = "在哪一行后面插入新的 Lore \\(从 1 开始\\)"
+                            ),
+                            CommandParameter(
+                                name = "lore",
+                                description = "Lore 内容"
+                            ),
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = "&f--silent&8: &7不输出命令提示"
+                            )
+                        )
+                    ),
+                    Command(
+                        name = "replace",
+                        info = "为手中物品替换 Lore 中的指定内容 (默认全部替换,参数可指定行)",
+                        parameters = listOf(
+                            CommandParameter(
+                                name = "oldChar",
+                                description = "旧的内容"
+                            ),
+                            CommandParameter(
+                                name = "newChar",
+                                description = "新的内容"
+                            ),
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = "&f--silent&8: &7不输出命令提示 &8\\; &f--line\\=Num&8: &7指定在某行中替换"
+                            )
+                        )
+                    ),
+                    Command(
+                        name = "clear",
+                        info = "清空手中物品的全部 Lore (谨慎使用)",
+                        parameters = listOf(
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = "&f--silent&8: &7不输出命令提示"
+                            )
+                        )
+                    ),
+                    Command(
+                        name = "clone",
+                        info = "将手中物品某行 Lore 的内容复制到另一行",
+                        parameters = listOf(
+                            CommandParameter(
+                                name = "lineA",
+                                description = "从哪一行复制 Lore \\(从 1 开始\\)"
+                            ),
+                            CommandParameter(
+                                name = "line",
+                                description = "将 Lore 粘贴至哪一行 \\(从 1 开始\\)"
+                            ),
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = "&f--silent&8: &7不输出命令提示"
+                            )
+                        )
+                    ),
+                    Command(
+                        name = "copy",
+                        info = "将手中物品的某行 Lore 的内容复制到剪贴板",
+                        parameters = listOf(
+                            CommandParameter(
+                                name = "line",
+                                description = "从哪一行复制 Lore \\(从 1 开始\\)"
+                            ),
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = "&f--silent&8: &7不输出命令提示"
+                            )
+                        )
+                    ),
+                    Command(
+                        name = "paste",
+                        info = "将剪贴板的 Lore 内容粘贴至某一行",
+                        parameters = listOf(
+                            CommandParameter(
+                                name = "line",
+                                description = "将 Lore 粘贴至哪一行 \\(从 1 开始\\)"
+                            ),
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = "&f--silent&8: &7不输出命令提示"
+                            )
+                        )
+                    ),
+                    Command(
+                        name = "cut",
+                        info = "将手中物品的某行 Lore 内容剪切至剪贴板 (复制并删除)",
+                        parameters = listOf(
+                            CommandParameter(
+                                name = "line",
+                                description = "从哪一行剪切 Lore \\(从 1 开始\\)"
+                            ),
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = "&f--silent&8: &7不输出命令提示"
+                            )
+                        )
+                    ),
+                    Command(
+                        name = "clipboard",
+                        info = "查看/修改/清空剪贴板内容",
+                        parameters = listOf(
+                            CommandParameter(
+                                name = "info/set/clear",
+                                description = "&finfo &7- &f查看剪贴板内容 &8\\; &fset <内容> [参数] &7- &f设置剪贴板内容 &8\\; &fclear [参数] &7- &f清空剪贴板内容"
+                            )
+                        )
+                    )
+                )
+            )
+        }
+
         literal("info") {
             execute<ProxyCommandSender> { sender: ProxyCommandSender, _: CommandContext<ProxyCommandSender>, _: String ->
                 try {

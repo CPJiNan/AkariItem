@@ -1,6 +1,9 @@
 package com.github.cpjinan.plugin.akariitem.internal.command
 
 import com.github.cpjinan.plugin.akariitem.utils.CommandUtil
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.Command
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.CommandParameter
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.createHelper
 import com.github.cpjinan.plugin.akariitem.utils.ItemUtil
 import org.bukkit.entity.Player
 import taboolib.common.platform.ProxyCommandSender
@@ -8,7 +11,6 @@ import taboolib.common.platform.command.CommandBody
 import taboolib.common.platform.command.CommandContext
 import taboolib.common.platform.command.CommandHeader
 import taboolib.common.platform.command.mainCommand
-import taboolib.expansion.createHelper
 import taboolib.module.lang.sendLang
 import taboolib.module.nms.itemTagReader
 import taboolib.platform.util.isAir
@@ -18,7 +20,53 @@ import taboolib.platform.util.isAir
 object NBTCommand {
     @CommandBody
     val main = mainCommand {
-        createHelper()
+        execute<ProxyCommandSender> { sender: ProxyCommandSender, _: CommandContext<ProxyCommandSender>, _: String ->
+            sender.createHelper(
+                mainCommand = Command(
+                    name = "nbtedit",
+                    parameters = listOf(
+                        CommandParameter("...", optional = true)
+                    ),
+                    description = "&f命令别名&8: &7nbt"
+                ),
+                subCommands = arrayOf(
+                    Command(
+                        name = "info",
+                        info = "查看手中物品 NBT",
+                        suggest = "/nbtedit info"
+                    ),
+                    Command(
+                        name = "set",
+                        parameters = listOf(
+                            CommandParameter(
+                                name = "key",
+                                description = "NBT 节点名 \\(支持多级节点\\)"
+                            ),
+                            CommandParameter(
+                                name = "value",
+                                description = "NBT 值 \\(类型: String\\)"
+                            ),
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = "&f--silent&8: &7不输出命令提示"
+                            )
+                        ),
+                        info = "修改手中物品指定 NBT"
+                    ),
+                    Command(
+                        name = "remove",
+                        parameters = listOf(
+                            CommandParameter(
+                                name = "key",
+                                description = "NBT 节点名 \\(支持多级节点\\)"
+                            )
+                        ),
+                        info = "删除手中物品指定 NBT"
+                    )
+                )
+            )
+        }
 
         literal("info") {
             execute<ProxyCommandSender> { sender: ProxyCommandSender, _: CommandContext<ProxyCommandSender>, _: String ->

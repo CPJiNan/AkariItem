@@ -46,7 +46,7 @@ object EnchantCommand {
                             CommandParameter(
                                 name = "options",
                                 optional = true,
-                                description = "&fsilent&8: &7不输出命令提示"
+                                description = "&f--silent&8: &7不输出命令提示"
                             )
                         ),
                         info = "设置手中物品附魔"

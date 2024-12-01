@@ -1,10 +1,12 @@
 package com.github.cpjinan.plugin.akariitem.internal.command
 
 import com.github.cpjinan.plugin.akariitem.utils.CommandUtil
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.Command
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.CommandParameter
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.createHelper
 import org.bukkit.entity.Player
 import taboolib.common.platform.ProxyCommandSender
 import taboolib.common.platform.command.*
-import taboolib.expansion.createHelper
 import taboolib.module.lang.sendLang
 import taboolib.platform.util.isAir
 
@@ -13,7 +15,25 @@ import taboolib.platform.util.isAir
 object UnbreakableCommand {
     @CommandBody
     val main = mainCommand {
-        createHelper()
+        execute<ProxyCommandSender> { sender: ProxyCommandSender, _: CommandContext<ProxyCommandSender>, _: String ->
+            sender.createHelper(
+                mainCommand = Command(
+                    name = "unbreakable",
+                    parameters = listOf(
+                        CommandParameter(
+                            name = "isUnbreakable",
+                            description = "是否无法破坏 \\(true/false\\)",
+                            suggest = "true"
+                        ),
+                        CommandParameter(
+                            name = "options",
+                            optional = true,
+                            description = "&f--silent&8: &7不输出命令提示"
+                        )
+                    )
+                )
+            )
+        }
 
         bool("isUnbreakable") {
             execute<ProxyCommandSender> { sender: ProxyCommandSender, context: CommandContext<ProxyCommandSender>, _: String ->
