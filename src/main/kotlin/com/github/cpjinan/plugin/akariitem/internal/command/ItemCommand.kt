@@ -3,10 +3,12 @@ package com.github.cpjinan.plugin.akariitem.internal.command
 import com.github.cpjinan.plugin.akariitem.api.ItemAPI
 import com.github.cpjinan.plugin.akariitem.common.PluginConfig
 import com.github.cpjinan.plugin.akariitem.utils.CommandUtil
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.Command
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.CommandParameter
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.createHelper
 import org.bukkit.entity.Player
 import taboolib.common.platform.ProxyCommandSender
 import taboolib.common.platform.command.*
-import taboolib.expansion.createHelper
 import taboolib.module.chat.colored
 import taboolib.module.lang.sendLang
 import taboolib.module.nms.getName
@@ -18,7 +20,66 @@ import taboolib.platform.util.isAir
 object ItemCommand {
     @CommandBody
     val main = mainCommand {
-        createHelper()
+        execute<ProxyCommandSender> { sender: ProxyCommandSender, _: CommandContext<ProxyCommandSender>, _: String ->
+            sender.createHelper(
+                mainCommand = Command(
+                    name = "akariitem",
+                    parameters = listOf(
+                        CommandParameter("...", optional = true)
+                    )
+                ),
+                subCommand = listOf(
+                    Command(
+                        name = "get",
+                        parameters = listOf(
+                            CommandParameter("id"),
+                            CommandParameter("amount", optional = true),
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = listOf("&fsilent&8: &7不输出命令提示")
+                            )
+                        ),
+                        info = "获取物品"
+                    ),
+                    Command(
+                        name = "give",
+                        parameters = listOf(
+                            CommandParameter("player"),
+                            CommandParameter("id"),
+                            CommandParameter("amount", optional = true),
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = listOf("&fsilent&8: &7不输出命令提示")
+                            )
+                        ),
+                        info = "给予玩家物品"
+                    ),
+                    Command(
+                        name = "save",
+                        parameters = listOf(
+                            CommandParameter("id"),
+                            CommandParameter("path", optional = true),
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = listOf("&fsilent&8: &7不输出命令提示")
+                            )
+                        ),
+                        info = "存储手中物品"
+                    ),
+                    Command(
+                        name = "list",
+                        info = "物品列表"
+                    ),
+                    Command(
+                        name = "reload",
+                        info = "重载插件"
+                    )
+                )
+            )
+        }
 
         literal("get").dynamic("id") {
             suggest { ItemAPI.getItemNames() }

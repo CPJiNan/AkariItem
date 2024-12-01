@@ -3,7 +3,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     java
-    id("io.izzel.taboolib") version "2.0.21"
+    id("io.izzel.taboolib") version "2.0.22"
     id("org.jetbrains.kotlin.jvm") version "1.9.22"
 }
 
@@ -34,7 +34,7 @@ taboolib {
             }
         }
     }
-    version { taboolib = "6.2.0-beta38" }
+    version { taboolib = "6.2.1-f095116" }
     relocate("ink.ptms.um", "com.github.cpjinan.plugin.akariitem.um")
 }
 
