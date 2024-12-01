@@ -30,7 +30,7 @@ object EnchantCommand {
                     Command(
                         name = "info",
                         info = "查看手中物品附魔",
-                        command = "enchant info"
+                        suggest = "/enchant info"
                     ),
                     Command(
                         name = "set",
