@@ -48,7 +48,7 @@ dependencies {
     compileOnly("ink.ptms.core:v12004:12004:universal")
     compileOnly(kotlin("stdlib"))
     compileOnly(fileTree("libs"))
-    taboo("ink.ptms:um:1.0.1")
+    taboo("ink.ptms:um:1.1.2")
 }
 
 kotlin {
