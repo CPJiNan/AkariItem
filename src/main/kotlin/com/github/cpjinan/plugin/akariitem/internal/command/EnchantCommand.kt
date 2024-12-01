@@ -1,12 +1,14 @@
 package com.github.cpjinan.plugin.akariitem.internal.command
 
 import com.github.cpjinan.plugin.akariitem.utils.CommandUtil
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.Command
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.CommandParameter
+import com.github.cpjinan.plugin.akariitem.utils.CommandUtil.createHelper
 import com.github.cpjinan.plugin.akariitem.utils.ItemUtil
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
 import taboolib.common.platform.ProxyCommandSender
 import taboolib.common.platform.command.*
-import taboolib.expansion.createHelper
 import taboolib.module.lang.sendLang
 import taboolib.platform.util.isAir
 
@@ -15,7 +17,42 @@ import taboolib.platform.util.isAir
 object EnchantCommand {
     @CommandBody
     val main = mainCommand {
-        createHelper()
+        execute<ProxyCommandSender> { sender: ProxyCommandSender, _: CommandContext<ProxyCommandSender>, _: String ->
+            sender.createHelper(
+                mainCommand = Command(
+                    name = "enchant",
+                    parameters = listOf(
+                        CommandParameter("...", optional = true)
+                    ),
+                    description = "&f命令别名&8: &7ench"
+                ),
+                subCommands = arrayOf(
+                    Command(
+                        name = "info",
+                        info = "查看手中物品附魔"
+                    ),
+                    Command(
+                        name = "set",
+                        parameters = listOf(
+                            CommandParameter(
+                                name = "enchant",
+                                description = "英文附魔名称 \\(可以使用 /enchant info 查看已附魔物品的附魔名称\\)"
+                            ),
+                            CommandParameter(
+                                name = "level",
+                                description = "附魔等级"
+                            ),
+                            CommandParameter(
+                                name = "options",
+                                optional = true,
+                                description = "&fsilent&8: &7不输出命令提示"
+                            )
+                        ),
+                        info = "设置手中物品附魔"
+                    )
+                )
+            )
+        }
 
         literal("info") {
             execute<ProxyCommandSender> { sender: ProxyCommandSender, _: CommandContext<ProxyCommandSender>, _: String ->

@@ -55,13 +55,13 @@ object CommandUtil {
      * @param plugin 插件名称
      * @param version 插件版本
      * @param mainCommand 主命令信息
-     * @param subCommand 子命令信息
+     * @param subCommands 子命令信息
      */
     fun ProxyCommandSender.createHelper(
         plugin: String = pluginId,
         version: String = "v$pluginVersion",
         mainCommand: Command,
-        subCommand: List<Command>? = null
+        vararg subCommands: Command? = arrayOf()
     ) {
         // 插件名和版本
         sendMessage(" &f&l$plugin &f&l$version".colored())
@@ -73,37 +73,35 @@ object CommandUtil {
         sendMessage(" &7参数:".colored())
 
         // 发送子命令信息
-        subCommand?.forEach { sub ->
-            "   &8- ${sub.getInfo()}".component().buildColored().sendTo(this)
-            sub.info?.let { sendMessage("     &7$it".colored()) }
+        subCommands.forEach { subCommand ->
+            "   &8- ${subCommand?.getInfo()}".component().buildColored().sendTo(this)
+            subCommand?.info?.let { sendMessage("     &7$it".colored()) }
         }
     }
 
     data class Command(
         val name: String,
-        val parameters: List<CommandParameter>? = null,
         val info: String? = null,
-        val description: List<String>? = null
+        val description: String? = null,
+        val parameters: List<CommandParameter>? = null
     )
 
     data class CommandParameter(
         val name: String,
-        val description: List<String>? = null,
+        val description: String? = null,
         val optional: Boolean = false
     )
 
     // 获取命令信息
     private fun Command.getInfo(): String {
-        val descriptionHover = description?.joinToString(",&f")?.let { "hover=&f$it" } ?: ""
         val parametersInfo = parameters?.joinToString(" ") { it.getInfo() } ?: ""
-        return "[&f$name]($descriptionHover) $parametersInfo"
+        return "[&f$name](${description?.let { "hover=&f$it" } ?: ""}) $parametersInfo"
     }
 
     // 获取命令参数信息
     private fun CommandParameter.getInfo(): String {
         val prefix = if (optional) "\\[" else "<"
         val suffix = if (optional) "\\]" else ">"
-        val descriptionHover = description?.joinToString(",")?.let { "hover=$it" } ?: ""
-        return "[&8$prefix$name$suffix]($descriptionHover)"
+        return "[&8$prefix$name$suffix](${description?.let { "hover=&f$it" } ?: ""})"
     }
 }

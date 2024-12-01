@@ -28,7 +28,7 @@ object ItemCommand {
                         CommandParameter("...", optional = true)
                     )
                 ),
-                subCommand = listOf(
+                subCommands = arrayOf(
                     Command(
                         name = "get",
                         parameters = listOf(
@@ -37,7 +37,7 @@ object ItemCommand {
                             CommandParameter(
                                 name = "options",
                                 optional = true,
-                                description = listOf("&fsilent&8: &7不输出命令提示")
+                                description = "&fsilent&8: &7不输出命令提示"
                             )
                         ),
                         info = "获取物品"
@@ -51,7 +51,7 @@ object ItemCommand {
                             CommandParameter(
                                 name = "options",
                                 optional = true,
-                                description = listOf("&fsilent&8: &7不输出命令提示")
+                                description = "&fsilent&8: &7不输出命令提示"
                             )
                         ),
                         info = "给予玩家物品"
@@ -64,7 +64,7 @@ object ItemCommand {
                             CommandParameter(
                                 name = "options",
                                 optional = true,
-                                description = listOf("&fsilent&8: &7不输出命令提示")
+                                description = "&fsilent&8: &7不输出命令提示"
                             )
                         ),
                         info = "存储手中物品"
