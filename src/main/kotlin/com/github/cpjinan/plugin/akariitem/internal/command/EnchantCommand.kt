@@ -37,6 +37,7 @@ object EnchantCommand {
                             CommandParameter(
                                 name = "enchant",
                                 description = "英文附魔名称 \\(可以使用 /enchant info 查看已附魔物品的附魔名称\\)"
+
                             ),
                             CommandParameter(
                                 name = "level",

@@ -83,25 +83,31 @@ object CommandUtil {
         val name: String,
         val info: String? = null,
         val description: String? = null,
+        val command: String? = null,
+        val suggest: String? = null,
+        val insert: String? = null,
         val parameters: List<CommandParameter>? = null
     )
 
     data class CommandParameter(
         val name: String,
         val description: String? = null,
-        val optional: Boolean = false
+        val optional: Boolean = false,
+        val command: String? = null,
+        val suggest: String? = null,
+        val insert: String? = null
     )
 
     // 获取命令信息
     private fun Command.getInfo(): String {
         val parametersInfo = parameters?.joinToString(" ") { it.getInfo() } ?: ""
-        return "[&f$name](${description?.let { "hover=&f$it" } ?: ""}) $parametersInfo"
+        return "[&f$name](${description?.let { "hover=&f$it;" } ?: ""}${command?.let { "command=$it;" } ?: ""}${suggest?.let { "suggest=$it;" } ?: ""}${suggest?.let { "insert=$it;" } ?: ""}) $parametersInfo"
     }
 
     // 获取命令参数信息
     private fun CommandParameter.getInfo(): String {
         val prefix = if (optional) "\\[" else "<"
         val suffix = if (optional) "\\]" else ">"
-        return "[&8$prefix$name$suffix](${description?.let { "hover=&f$it" } ?: ""})"
+        return "[&8$prefix$name$suffix](${description?.let { "hover=&f$it;" } ?: ""}${command?.let { "command=$it;" } ?: ""}${suggest?.let { "suggest=$it;" } ?: ""}${suggest?.let { "insert=$it;" } ?: ""})"
     }
 }
