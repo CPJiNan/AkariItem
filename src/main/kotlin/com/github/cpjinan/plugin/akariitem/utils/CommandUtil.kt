@@ -1,6 +1,8 @@
 package com.github.cpjinan.plugin.akariitem.utils
 
+import org.bukkit.entity.Player
 import taboolib.common.platform.ProxyCommandSender
+import taboolib.common.platform.function.adaptCommandSender
 import taboolib.common.platform.function.pluginId
 import taboolib.common.platform.function.pluginVersion
 import taboolib.module.chat.colored
@@ -80,6 +82,23 @@ object CommandUtil {
             "   &8- ${subCommand?.getInfo()}".component().buildColored().sendTo(this)
             subCommand?.info?.let { sendMessage("     &7$it".colored()) }
         }
+    }
+
+    /**
+     * 发送命令帮助
+     * @param plugin 插件名称
+     * @param version 插件版本
+     * @param mainCommand 主命令信息
+     * @param subCommands 子命令信息
+     */
+    @JvmStatic
+    fun Player.createHelper(
+        plugin: String = pluginId,
+        version: String = "v$pluginVersion",
+        mainCommand: Command,
+        vararg subCommands: Command? = arrayOf()
+    ) {
+        adaptCommandSender(this).createHelper(plugin, version, mainCommand, *subCommands)
     }
 
     data class Command(
