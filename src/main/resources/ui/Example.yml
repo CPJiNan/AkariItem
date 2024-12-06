@@ -1,0 +1,117 @@
+# 为方便上手，AkariItem 采用类似 TrMenu 的菜单配置格式
+
+# 菜单标题 (支持 PlaceholderAPI 变量)
+Title:
+  - '菜单标题'
+  - '动态标题支持'
+
+# 菜单界面布局
+Layout:
+  - - '########`Close`'
+    - '         '
+    - '         '
+    - '         '
+    - '########`Next`'
+
+  - - '########`Close`'
+    - '         '
+    - '         '
+    - '         '
+    - '`Pre`########'
+
+# 玩家背包布局
+PlayerInventory:
+  - - '         '
+    - '         '
+    - '         '
+    - '         '
+
+# 菜单选项设置
+Options:
+  # 标题切换间隔 (tick)
+  # 每隔一段时间按照 Title 列表顺序切换一次标题
+  # 1 s = 20 tick, 1 s = 1000 ms, 1 tick = 50 ms
+  Title-Update: 80
+  # 玩家可以操作的槽位
+  Free-Slots:
+    - 71~73
+  # 默认布局
+  Default-Layout: 0
+  # 隐藏玩家背包物品
+  Hide-Player-Inventory: false
+  # 最小点击间隔 (tick)
+  Min-Click-Delay: 200
+
+# 菜单绑定设置
+Bindings:
+  # 输入指令打开菜单
+  Commands:
+    - 'openExampleUI'
+  # 手持物品右键打开菜单
+  Items:
+    - 'AkariItem@Apple'
+
+# 事件设置
+Events:
+  # 打开菜单
+  Open:
+    # 条件 (Kether 支持, 需列表每行执行结果均返回 true)
+    Condition:
+      - 'permission 示例权限.open.exampleUI'
+    # 打开菜单执行动作
+    Actions:
+      - 'sound BLOCK_CHEST_OPEN-1-0'
+    # 无法打开菜单执行动作
+    Deny:
+      - 'sound ENTITY_ITEM_BREAK-1-0'
+      - 'title "&c&l缺少权限" by 15 20 15'
+      - 'subtitle "&c打开该菜单需要权限 示例权限.open.exampleUI" by 15 20 15'
+  # 关闭菜单执行动作
+  Close:
+    - 'sound BLOCK_CHEST_CLOSE-1-0'
+
+# 物品
+Icons:
+  '#':
+    # 材质、名称、Lore、槽位 的刷新间隔
+    Update: [ -1, 10, 15, -1 ]
+    Display:
+      Material: [ 'Diamond' ]
+      Name: [ '&fName 1', '&fName 2', '&fName 3','&fName 1' ]
+      Lore:
+        - - '&7Thanks &f:> &7for using!'
+          - '&7Thanks &f:) &7for using!'
+        - - '&7Thanks &f:) &7for using!'
+          - '&7Thanks &f:> &7for using!'
+      # Slot:
+      #   - - 0
+      #     - 1
+      #   - - '4~6'
+    Actions:
+      All: 'sound BLOCK_NOTE_BLOCK_PLING-1-2'
+
+  Close:
+    Update: [ -1, 5, -1, -1 ]
+    Display:
+      Material: [ 'Red Stained Glass Pane' ]
+      Name: [ '&cClose' ]
+    Actions:
+      All:
+        - 'command "akariui close" as op'
+
+  Next:
+    Display:
+      Material: [ 'Cyan Stained Glass Pane' ]
+      Name: [ '&aNext Page' ]
+    Actions:
+      All:
+        - 'AkariItem@Page 1'
+        - 'sound BLOCK_CHEST_OPEN-1-2'
+  Pre:
+    Display:
+      Material: [ 'Lime Stained Glass Pane' ]
+      Name: [ '&aPrevious Page' ]
+    Actions:
+      All:
+        - 'AkariItem@Page 0'
+        - 'sound BLOCK_CHEST_OPEN-1-2'

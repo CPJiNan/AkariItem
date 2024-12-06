@@ -7,6 +7,7 @@ object CooldownUtil {
      * 设置冷却时间
      * @param id 标识符
      * @param time 冷却时间 (毫秒)
+     * 1 s = 20 tick, 1 s = 1000 ms, 1 tick = 50 ms
      */
     @JvmStatic
     fun setCooldown(id: String, time: Long) {
@@ -17,6 +18,7 @@ object CooldownUtil {
      * 增加冷却时间
      * @param id 标识符
      * @param time 增加的冷却时间 (毫秒)
+     * 1 s = 20 tick, 1 s = 1000 ms, 1 tick = 50 ms
      */
     @JvmStatic
     fun addCooldown(id: String, time: Long) {
@@ -33,6 +35,7 @@ object CooldownUtil {
      * 减少冷却时间
      * @param id 标识符
      * @param time 减少的冷却时间 (毫秒)
+     * 1 s = 20 tick, 1 s = 1000 ms, 1 tick = 50 ms
      */
     @JvmStatic
     fun removeCooldown(id: String, time: Long) {
@@ -46,6 +49,7 @@ object CooldownUtil {
     /**
      * 重置冷却时间
      * @param id 标识符
+     * 1 s = 20 tick, 1 s = 1000 ms, 1 tick = 50 ms
      */
     @JvmStatic
     fun resetCooldown(id: String) {
@@ -56,6 +60,7 @@ object CooldownUtil {
      * 获取是否冷却结束
      * @param id 标识符
      * @return 冷却是否冷却结束
+     * 1 s = 20 tick, 1 s = 1000 ms, 1 tick = 50 ms
      */
     @JvmStatic
     fun isCooldownFinish(id: String): Boolean {
@@ -67,6 +72,7 @@ object CooldownUtil {
      * 获取冷却剩余时间
      * @param id 标识符
      * @return 剩余冷却时间 (毫秒)
+     * 1 s = 20 tick, 1 s = 1000 ms, 1 tick = 50 ms
      */
     @JvmStatic
     fun getCooldown(id: String): Long {
