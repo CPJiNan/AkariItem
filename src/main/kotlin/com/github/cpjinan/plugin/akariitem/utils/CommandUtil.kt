@@ -11,6 +11,7 @@ object CommandUtil {
      * 解析命令行参数及其对应值
      * @return 参数及对应值
      */
+    @JvmStatic
     fun parseOptions(args: List<String>): HashMap<String, String?> {
         val options = hashMapOf<String, String?>()
         var i = 0
@@ -38,6 +39,7 @@ object CommandUtil {
      * 解析带有空格的命令参数
      * @return 参数值
      */
+    @JvmStatic
     fun parseContentAfterSpace(args: List<String>): String {
         var i = 0
         var content = ""
@@ -57,6 +59,7 @@ object CommandUtil {
      * @param mainCommand 主命令信息
      * @param subCommands 子命令信息
      */
+    @JvmStatic
     fun ProxyCommandSender.createHelper(
         plugin: String = pluginId,
         version: String = "v$pluginVersion",
