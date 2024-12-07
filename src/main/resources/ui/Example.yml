@@ -1,9 +1,5 @@
-# 为方便上手，AkariItem 采用类似 TrMenu 的菜单配置格式
-
 # 菜单标题 (支持 PlaceholderAPI 变量)
-Title:
-  - '菜单标题'
-  - '动态标题支持'
+Title: '菜单标题'
 
 # 菜单界面布局
 Layout:
@@ -28,10 +24,6 @@ PlayerInventory:
 
 # 菜单选项设置
 Options:
-  # 标题切换间隔 (tick)
-  # 每隔一段时间按照 Title 列表顺序切换一次标题
-  # 1 s = 20 tick, 1 s = 1000 ms, 1 tick = 50 ms
-  Title-Update: 80
   # 玩家可以操作的槽位
   Free-Slots:
     - 71~73
@@ -73,44 +65,32 @@ Events:
 # 物品
 Icons:
   '#':
-    # 材质、名称、Lore、槽位 的刷新间隔
-    Update: [ -1, 10, 15, -1 ]
     Display:
-      Material: [ 'Diamond' ]
-      Name: [ '&fName 1', '&fName 2', '&fName 3','&fName 1' ]
-      Lore:
-        - - '&7Thanks &f:> &7for using!'
-          - '&7Thanks &f:) &7for using!'
-        - - '&7Thanks &f:) &7for using!'
-          - '&7Thanks &f:> &7for using!'
-      # Slot:
-      #   - - 0
-      #     - 1
-      #   - - '4~6'
+      Type: 'GRAY_STAINED_GLASS_PANE'
+      Display: '§8'
     Actions:
       All: 'sound BLOCK_NOTE_BLOCK_PLING-1-2'
 
   Close:
-    Update: [ -1, 5, -1, -1 ]
     Display:
-      Material: [ 'Red Stained Glass Pane' ]
-      Name: [ '&cClose' ]
+      Type: 'RED_STAINED_GLASS_PANE'
+      Display: '§c关闭菜单'
     Actions:
       All:
         - 'command "akariui close" as op'
 
   Next:
     Display:
-      Material: [ 'Cyan Stained Glass Pane' ]
-      Name: [ '&aNext Page' ]
+      Material: 'LIME_STAINED_GLASS_PANE'
+      Name: '§a下一页 >>>'
     Actions:
       All:
         - 'AkariItem@Page 1'
         - 'sound BLOCK_CHEST_OPEN-1-2'
   Pre:
     Display:
-      Material: [ 'Lime Stained Glass Pane' ]
-      Name: [ '&aPrevious Page' ]
+      Material: 'LIME_STAINED_GLASS_PANE'
+      Name: '§a<<< 上一页'
     Actions:
       All:
         - 'AkariItem@Page 0'

@@ -6,6 +6,7 @@ import org.bukkit.Color
 import org.bukkit.DyeColor
 import org.bukkit.block.banner.Pattern
 import org.bukkit.block.banner.PatternType
+import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.enchantments.Enchantment
 import org.bukkit.entity.Player
@@ -27,16 +28,20 @@ import taboolib.platform.util.buildItem
 @Suppress("DEPRECATION")
 object ItemUtil {
     @JvmStatic
-    fun getItemFromConfig(config: YamlConfiguration, path: String): ItemStack? {
-        val type = config.getString("$path.Type")?.let { XMaterial.valueOf(it) } ?: return null
+    fun getItemFromConfig(config: YamlConfiguration, path: String): ItemStack? =
+        config.getConfigurationSection(path)?.let { getItemFromConfig(it) }
+
+    @JvmStatic
+    fun getItemFromConfig(config: ConfigurationSection): ItemStack? {
+        val type = config.getString("Type")?.let { XMaterial.valueOf(it) } ?: return null
         val item = buildItem(type) {
             // 基本属性
-            config.getInt("$path.Data", 0).let { damage = it }
-            config.getString("$path.Display")?.let { name = it }
-            config.getStringList("$path.Lore").let { lore.addAll(it) }
+            config.getInt("Data", 0).let { damage = it }
+            config.getString("Display")?.let { name = it }
+            config.getStringList("Lore").let { lore.addAll(it) }
 
             // 附魔属性
-            config.getConfigurationSection("$path.Enchantments")?.let { enchantments ->
+            config.getConfigurationSection("Enchantments")?.let { enchantments ->
                 enchantments.getKeys(false).forEach { enchantKey ->
                     Enchantment.getByName(enchantKey)?.let { ench ->
                         enchants[ench] = enchantments.getInt(enchantKey)
@@ -45,14 +50,14 @@ object ItemUtil {
             }
 
             // 常规物品设置
-            flags.addAll(config.getStringList("$path.Options.HideFlags").mapNotNull { ItemFlag.valueOf(it) })
-            if (config.getBoolean("$path.Options.Glow", false)) shiny()
-            isUnbreakable = config.getBoolean("$path.Options.Unbreakable", false)
+            flags.addAll(config.getStringList("Options.HideFlags").mapNotNull { ItemFlag.valueOf(it) })
+            if (config.getBoolean("Options.Glow", false)) shiny()
+            isUnbreakable = config.getBoolean("Options.Unbreakable", false)
 
             // 特殊物品设置
             when (originMeta) {
                 is BannerMeta -> {
-                    config.getStringList("$path.Options.BannerPatterns").forEach { pattern ->
+                    config.getStringList("Options.BannerPatterns").forEach { pattern ->
                         pattern.split("-", limit = 2).let { (colorName, patternName) ->
                             val color = DyeColor.valueOf(colorName)
                             val patternType = PatternType.getByIdentifier(patternName) ?: return@forEach
@@ -62,18 +67,18 @@ object ItemUtil {
                 }
 
                 is LeatherArmorMeta -> {
-                    color = config.getInt("$path.Options.Color").let(Color::fromRGB)
+                    color = config.getInt("Options.Color").let(Color::fromRGB)
                 }
 
                 is PotionMeta -> {
-                    config.getString("$path.Options.BasePotionData.Type")?.let { potionTypeName ->
+                    config.getString("Options.BasePotionData.Type")?.let { potionTypeName ->
                         potionData = PotionData(
                             PotionType.valueOf(potionTypeName),
-                            config.getBoolean("$path.Options.BasePotionData.Extended"),
-                            config.getBoolean("$path.Options.BasePotionData.Upgraded")
+                            config.getBoolean("Options.BasePotionData.Extended"),
+                            config.getBoolean("Options.BasePotionData.Upgraded")
                         )
                     }
-                    config.getStringList("$path.Options.PotionEffects").forEach { effect ->
+                    config.getStringList("Options.PotionEffects").forEach { effect ->
                         effect.split("-", limit = 3).let { (typeName, amplifier, duration) ->
                             PotionEffectType.getByName(typeName)?.let {
                                 potions.add(PotionEffect(it, duration.toInt(), amplifier.toInt()))
@@ -83,7 +88,7 @@ object ItemUtil {
                 }
 
                 is SkullMeta -> {
-                    skullOwner = config.getString("$path.Options.SkullOwner")
+                    skullOwner = config.getString("Options.SkullOwner")
                 }
             }
 
@@ -91,7 +96,7 @@ object ItemUtil {
             colored()
         }
 
-        config.getConfigurationSection("$path.NBT")?.let { nbtSection ->
+        config.getConfigurationSection("NBT")?.let { nbtSection ->
             item.itemTagReader {
                 nbtSection.getKeys(true).forEach { key ->
                     set(key, nbtSection.get(key))

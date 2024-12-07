@@ -14,6 +14,7 @@ taboolib {
             CommandHelper,
             Kether,
             JavaScript,
+            Basic,
             Bukkit,
             BukkitUI,
             BukkitNMS,

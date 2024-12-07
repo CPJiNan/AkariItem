@@ -138,6 +138,16 @@ object ItemAPI {
     }
 
     /**
+     * 从配置文件获取物品
+     * @param config 配置文件节点
+     * @return 指定物品的 ItemStack
+     * @author CPJiNan
+     */
+    fun getItem(config: ConfigurationSection): ItemStack? {
+        return getItemFromConfig(config)
+    }
+
+    /**
      * 从其他插件获取物品
      * @param plugin 插件名称
      * @param id 物品 ID
