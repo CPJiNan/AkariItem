@@ -3,24 +3,17 @@ Title: '菜单标题'
 
 # 菜单界面布局
 Layout:
-  - - '########`Close`'
+  - - '########C'
     - '         '
     - '         '
     - '         '
-    - '########`Next`'
+    - '########N'
 
-  - - '########`Close`'
+  - - '########C'
     - '         '
     - '         '
     - '         '
-    - '`Pre`########'
-
-# 玩家背包布局
-PlayerInventory:
-  - - '         '
-    - '         '
-    - '         '
-    - '         '
+    - 'P########'
 
 # 菜单选项设置
 Options:
@@ -32,7 +25,7 @@ Options:
   # 隐藏玩家背包物品
   Hide-Player-Inventory: false
   # 最小点击间隔 (tick)
-  Min-Click-Delay: 200
+  Min-Click-Delay: 20
 
 # 菜单绑定设置
 Bindings:
@@ -71,15 +64,15 @@ Icons:
     Actions:
       All: 'sound BLOCK_NOTE_BLOCK_PLING-1-2'
 
-  Close:
+  C:
     Display:
       Type: 'RED_STAINED_GLASS_PANE'
       Display: '§c关闭菜单'
     Actions:
       All:
-        - 'command "akariui close" as op'
+        - 'akariitem closeui'
 
-  Next:
+  N:
     Display:
       Material: 'LIME_STAINED_GLASS_PANE'
       Name: '§a下一页 >>>'
@@ -87,7 +80,7 @@ Icons:
       All:
         - 'AkariItem@Page 1'
         - 'sound BLOCK_CHEST_OPEN-1-2'
-  Pre:
+  P:
     Display:
       Material: 'LIME_STAINED_GLASS_PANE'
       Name: '§a<<< 上一页'

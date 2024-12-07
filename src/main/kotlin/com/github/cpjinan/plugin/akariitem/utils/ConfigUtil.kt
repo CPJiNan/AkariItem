@@ -11,6 +11,20 @@ import java.io.OutputStream
 object ConfigUtil {
 
     /**
+     * 获取配置节点中所有ConfigurationSection
+     * @return 配置节点中所有ConfigurationSection
+     * @author CPJiNan
+     */
+    @JvmStatic
+    fun ConfigurationSection.getConfigSections(): HashMap<String, ConfigurationSection> {
+        val map = HashMap<String, ConfigurationSection>()
+        this.getKeys(false).forEach { key ->
+            this.getConfigurationSection(key)?.let { map[key] = it }
+        }
+        return map
+    }
+
+    /**
      * 获取文件中所有ConfigurationSection
      * @return 文件中所有ConfigurationSection
      * @author CPJiNan
