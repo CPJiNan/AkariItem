@@ -1,8 +1,8 @@
 package com.github.cpjinan.plugin.akariitem.common
 
 import com.github.cpjinan.plugin.akariitem.utils.LoggerUtil.message
-import com.github.cpjinan.plugin.akariitem.utils.VersionUtil.getSemanticVersion
-import com.github.cpjinan.plugin.akariitem.utils.VersionUtil.toSemanticVersion
+import com.github.cpjinan.plugin.akariitem.utils.VersionUtil.getVersion
+import com.github.cpjinan.plugin.akariitem.utils.VersionUtil.toVersion
 import org.bukkit.entity.Player
 import org.bukkit.event.player.PlayerJoinEvent
 import taboolib.common.LifeCycle
@@ -49,8 +49,8 @@ object PluginUpdate {
             val urlConnection =
                 URL("https://cpjinan.github.io/Pages/AkariItem/version.html").openConnection() as HttpURLConnection
             try {
-                val latestVersion = urlConnection.inputStream.bufferedReader().readText().toSemanticVersion()!!
-                val currentVersion = BukkitPlugin.getInstance().getSemanticVersion()!!
+                val latestVersion = urlConnection.inputStream.bufferedReader().readText().toVersion()!!
+                val currentVersion = BukkitPlugin.getInstance().getVersion()!!
                 if (latestVersion > currentVersion) {
                     console().asLangTextList("Plugin-Update")
                         .replace(Pair("%latestVersion%", latestVersion), Pair("%currentVersion%", currentVersion))
@@ -71,8 +71,8 @@ object PluginUpdate {
             val urlConnection =
                 URL("https://cpjinan.github.io/Pages/AkariItem/version.html").openConnection() as HttpURLConnection
             try {
-                val latestVersion = urlConnection.inputStream.bufferedReader().readText().toSemanticVersion()!!
-                val currentVersion = BukkitPlugin.getInstance().getSemanticVersion()!!
+                val latestVersion = urlConnection.inputStream.bufferedReader().readText().toVersion()!!
+                val currentVersion = BukkitPlugin.getInstance().getVersion()!!
                 if (latestVersion > currentVersion) {
                     player.asLangTextList("Plugin-Update")
                         .replace(Pair("%latestVersion%", latestVersion), Pair("%currentVersion%", currentVersion))
