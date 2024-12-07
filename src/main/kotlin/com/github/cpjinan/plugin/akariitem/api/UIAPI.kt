@@ -1,11 +1,13 @@
 package com.github.cpjinan.plugin.akariitem.api
 
 import com.github.cpjinan.plugin.akariitem.utils.UIUtil
+import com.github.cpjinan.plugin.akariitem.utils.UIUtil.Icon
 import com.github.cpjinan.plugin.akariitem.utils.UIUtil.openUIFromConfig
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
 import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
+import taboolib.module.ui.type.Chest
 
 object UIAPI {
     /**
@@ -14,7 +16,10 @@ object UIAPI {
      * @author CPJiNan
      */
     @JvmStatic
-    fun buildUI(config: YamlConfiguration): Inventory? = UIUtil.buildUIFromConfig(config)
+    fun buildUI(
+        config: YamlConfiguration,
+        onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
+    ): Inventory? = UIUtil.buildUIFromConfig(config, onFinish)
 
     /**
      * 为玩家打开指定 UI 界面
@@ -22,8 +27,11 @@ object UIAPI {
      * @author CPJiNan
      */
     @JvmStatic
-    fun Player.openUI(config: YamlConfiguration) {
-        this.openUIFromConfig(config)
+    fun Player.openUI(
+        config: YamlConfiguration,
+        onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
+    ) {
+        this.openUIFromConfig(config, onFinish)
     }
 
     /**

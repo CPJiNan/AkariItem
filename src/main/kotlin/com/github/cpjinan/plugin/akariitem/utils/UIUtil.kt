@@ -14,13 +14,19 @@ import taboolib.module.ui.type.Chest
 
 object UIUtil {
     @JvmStatic
-    fun Player.openUIFromConfig(config: YamlConfiguration) {
-        val inventory = buildUIFromConfig(config) ?: return
+    fun Player.openUIFromConfig(
+        config: YamlConfiguration,
+        onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
+    ) {
+        val inventory = buildUIFromConfig(config, onFinish) ?: return
         this.openInventory(inventory)
     }
 
     @JvmStatic
-    fun buildUIFromConfig(config: YamlConfiguration): Inventory? {
+    fun buildUIFromConfig(
+        config: YamlConfiguration,
+        onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
+    ): Inventory? {
         val settings = getUISettingsFromConfig(config) ?: return null
         val icons = mutableListOf<Icon>()
 
@@ -36,7 +42,9 @@ object UIUtil {
                         item = item,
                         actions = actions
                     )
-                }?.let { icon -> icons.add(icon) }
+                }?.let { icon ->
+                    icons.add(icon)
+                }
             }
         }
 
@@ -70,10 +78,12 @@ object UIUtil {
                     it.evalKether(event.player)
                 }
             }
+
+            onFinish(this, icons)
         }
     }
 
-    private fun getUISettingsFromConfig(config: YamlConfiguration): UISettings? {
+    fun getUISettingsFromConfig(config: YamlConfiguration): UISettings? {
         val freeSlots = mutableListOf<Int>()
 
         config.getStringList("Options.Free-Slots").forEach {
@@ -102,7 +112,7 @@ object UIUtil {
         )
     }
 
-    private data class UISettings(
+    data class UISettings(
         val title: String,
         val layout: List<String>,
         val freeSlots: List<Int>? = null,
@@ -113,7 +123,7 @@ object UIUtil {
         val icons: HashMap<String, ConfigurationSection>? = null
     )
 
-    private data class Icon(
+    data class Icon(
         val symbol: String,
         val item: ItemStack,
         val actions: HashMap<String, List<String>>? = null
