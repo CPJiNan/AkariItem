@@ -26,6 +26,7 @@ object ItemAPI {
      * 重载物品配置文件
      * @author CPJiNan
      */
+    @JvmStatic
     fun reloadItem() {
         itemFiles = FileUtil.getFile(File(FileUtil.dataFolder, "item"), true)
             .filter { it.name.endsWith(".yml") }.toCollection(ArrayList())
@@ -39,6 +40,7 @@ object ItemAPI {
      * @return 物品配置文件列表
      * @author CPJiNan
      */
+    @JvmStatic
     fun getItemFiles(): ArrayList<File> = itemFiles
 
     /**
@@ -46,6 +48,7 @@ object ItemAPI {
      * @return 物品配置节点列表 (由 物品ID 及其 配置节点 组成)
      * @author CPJiNan
      */
+    @JvmStatic
     fun getItemSections(): HashMap<String, ConfigurationSection> = itemSections
 
     /**
@@ -53,6 +56,7 @@ object ItemAPI {
      * @return 物品名称列表
      * @author CPJiNan
      */
+    @JvmStatic
     fun getItemNames(): ArrayList<String> =
         itemNames.filter { itemSections[it]?.getBoolean("Hide") != true }.toCollection(ArrayList())
 
@@ -61,6 +65,7 @@ object ItemAPI {
      * @return 物品配置
      * @author CPJiNan
      */
+    @JvmStatic
     fun getItemConfig(): YamlConfiguration = itemConfig
 
     /**
@@ -70,6 +75,7 @@ object ItemAPI {
      * @param id 物品 ID
      * @author CPJiNan
      */
+    @JvmStatic
     fun saveItem(item: ItemStack, file: File, id: String) {
         val config = YamlConfiguration.loadConfiguration(file)
         config.set(id, null)
@@ -84,6 +90,7 @@ object ItemAPI {
      * @param id 物品 ID
      * @author CPJiNan
      */
+    @JvmStatic
     fun saveItem(item: ItemStack, file: String, id: String) {
         val itemFile = FileUtil.getFileOrCreate(file)
         val config = YamlConfiguration.loadConfiguration(itemFile)
@@ -98,6 +105,7 @@ object ItemAPI {
      * @return 指定物品的 ItemStack
      * @author CPJiNan
      */
+    @JvmStatic
     fun getItem(id: String): ItemStack? {
         return getItemFromConfig(itemConfig, id)
     }
@@ -109,6 +117,7 @@ object ItemAPI {
      * @return 指定物品的 ItemStack
      * @author CPJiNan
      */
+    @JvmStatic
     fun getItem(file: File, id: String): ItemStack? {
         val config = YamlConfiguration.loadConfiguration(file)
         return getItemFromConfig(config, id)
@@ -121,6 +130,7 @@ object ItemAPI {
      * @return 指定物品的 ItemStack
      * @author CPJiNan
      */
+    @JvmStatic
     fun getItem(file: String, id: String): ItemStack? {
         val config = YamlConfiguration.loadConfiguration(File(FileUtil.dataFolder, file))
         return getItemFromConfig(config, id)
@@ -133,6 +143,7 @@ object ItemAPI {
      * @return 指定物品的 ItemStack
      * @author CPJiNan
      */
+    @JvmStatic
     fun getItem(config: YamlConfiguration, id: String): ItemStack? {
         return getItemFromConfig(config, id)
     }
@@ -143,6 +154,7 @@ object ItemAPI {
      * @return 指定物品的 ItemStack
      * @author CPJiNan
      */
+    @JvmStatic
     fun getItem(config: ConfigurationSection): ItemStack? {
         return getItemFromConfig(config)
     }
@@ -155,6 +167,7 @@ object ItemAPI {
      * @return 指定物品的 ItemStack
      * @author CPJiNan
      */
+    @JvmStatic
     fun getItem(plugin: String, id: String, player: Player? = null): ItemStack? {
         return getItemFromPlugin(plugin, id, player)
     }

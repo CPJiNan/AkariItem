@@ -6,70 +6,72 @@ import com.github.cpjinan.plugin.akariitem.common.script.kether.Kether.evalKethe
 import com.github.cpjinan.plugin.akariitem.utils.ConfigUtil.getConfigSections
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.YamlConfiguration
+import org.bukkit.entity.Player
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import taboolib.module.ui.buildMenu
 import taboolib.module.ui.type.Chest
 
 object UIUtil {
-    fun getUIFromSettings(config: YamlConfiguration): UI? {
+    @JvmStatic
+    fun Player.openUIFromConfig(config: YamlConfiguration) {
+        val inventory = buildUIFromConfig(config) ?: return
+        this.openInventory(inventory)
+    }
+
+    @JvmStatic
+    fun buildUIFromConfig(config: YamlConfiguration): Inventory? {
         val settings = getUISettingsFromConfig(config) ?: return null
-        val pages = mutableListOf<Inventory>()
+        val icons = mutableListOf<Icon>()
 
-        settings.layout.forEach { layoutList ->
-            val layout = (layoutList as? List<*>)?.map { it.toString() }?.toTypedArray() ?: return@forEach
-            val icons = mutableListOf<Icon>()
-
-            settings.icons?.forEach { (index, section) ->
-                val actions = hashMapOf<String, List<String>>()
-                section.getConfigSections().forEach { action ->
-                    actions[action.key] = section.getStringList(action.key)
-                }
-                section.getConfigurationSection("Display")?.let { itemSection ->
-                    ItemAPI.getItem(itemSection)?.let { item ->
-                        Icon(
-                            symbol = index,
-                            item = item,
-                            actions = actions
-                        )
-                    }?.let { icon -> icons.add(icon) }
-                }
+        settings.icons?.forEach { (index, section) ->
+            val actions = hashMapOf<String, List<String>>()
+            section.getConfigSections().forEach { action ->
+                actions[action.key] = section.getStringList(action.key)
             }
+            section.getConfigurationSection("Display")?.let { itemSection ->
+                ItemAPI.getItem(itemSection)?.let { item ->
+                    Icon(
+                        symbol = index,
+                        item = item,
+                        actions = actions
+                    )
+                }?.let { icon -> icons.add(icon) }
+            }
+        }
 
-            pages.add(
-                buildMenu<Chest>(settings.title) {
-                    map(*layout)
-                    icons.forEach { icon ->
-                        set(icon.symbol[0], icon.item) {
-                            icon.actions?.forEach { (index, action) ->
-                                if (UIClickType.equals(clickEvent(), UIClickType.valueOf(index.uppercase()))) {
-                                    action.evalKether(clicker)
-                                }
-                            }
+        return buildMenu<Chest>(settings.title) {
+            map(*settings.layout.toTypedArray())
+
+            icons.forEach { icon ->
+                set(icon.symbol[0], icon.item) {
+                    if (settings.freeSlots != null && clickEvent().slot in settings.freeSlots) isCancelled = true
+                    icon.actions?.forEach { (index, action) ->
+                        if (index == "ALL") action.evalKether(clicker)
+                        else if (UIClickType.equals(clickEvent(), UIClickType.valueOf(index.uppercase()))) {
+                            action.evalKether(clicker)
                         }
                     }
                 }
-            )
-        }
+            }
 
-        return UI(
-            title = settings.title,
-            pages = pages,
-            freeSlots = settings.freeSlots,
-            defaultLayout = settings.defaultLayout,
-            hidePlayerInventory = settings.hidePlayerInventory,
-            minClickDelay = settings.minClickDelay,
-            bindingCommands = settings.bindingCommands,
-            bindingItems = settings.bindingItems,
-            openCondition = settings.openCondition,
-            openActions = settings.openActions,
-            openDeny = settings.openDeny,
-            closeActions = settings.closeActions
-        )
+            onBuild(async = true) { player, _ ->
+                if (settings.openCondition?.evalKether(player) as Boolean) {
+                    settings.openActions?.evalKether(player)
+                } else settings.openDeny?.evalKether(player)
+            }
+
+            onClose(once = true) { event ->
+                settings.closeActions?.forEach {
+                    it.evalKether(event.player)
+                }
+            }
+        }
     }
 
-    fun getUISettingsFromConfig(config: YamlConfiguration): UISettings? {
+    private fun getUISettingsFromConfig(config: YamlConfiguration): UISettings? {
         val freeSlots = mutableListOf<Int>()
+
         config.getStringList("Options.Free-Slots").forEach {
             if (it.contains("~")) {
                 val (start, end) = it.split("~", limit = 2)
@@ -84,29 +86,10 @@ object UIUtil {
             } else it.toIntOrNull()?.let { freeSlots.add(it) }
         }
 
-        val bindingItems = mutableListOf<ItemStack>()
-        config.getStringList("Bindings.Items").forEach {
-            if (it.contains("@")) {
-                val (plugin, id) = it.split("@", limit = 2)
-                when (plugin.lowercase()) {
-                    "akariitem" -> {
-                        ItemAPI.getItem(id)?.let { item ->
-                            bindingItems.add(item)
-                        }
-                    }
-                }
-            }
-        }
-
         return UISettings(
             title = config.getString("Title") ?: return null,
-            layout = config.getList("Layout") ?: return null,
+            layout = config.getStringList("Layout"),
             freeSlots = freeSlots,
-            defaultLayout = config.getInt("Options.Default-Layout"),
-            hidePlayerInventory = config.getBoolean("Options.Hide-Player-Inventory"),
-            minClickDelay = config.getInt("Options.Min-Click-Delay"),
-            bindingCommands = config.getStringList("Bindings.Commands"),
-            bindingItems = bindingItems,
             openCondition = config.getStringList("Events.Open.Condition"),
             openActions = config.getStringList("Events.Open.Actions"),
             openDeny = config.getStringList("Events.Open.Deny"),
@@ -115,30 +98,10 @@ object UIUtil {
         )
     }
 
-    data class UI(
+    private data class UISettings(
         val title: String,
-        val pages: List<Inventory>,
+        val layout: List<String>,
         val freeSlots: List<Int>? = null,
-        val defaultLayout: Int = 0,
-        val hidePlayerInventory: Boolean = false,
-        val minClickDelay: Int = -1,
-        val bindingCommands: List<String>? = null,
-        val bindingItems: List<ItemStack>? = null,
-        val openCondition: List<String>? = null,
-        val openActions: List<String>? = null,
-        val openDeny: List<String>? = null,
-        val closeActions: List<String>? = null
-    )
-
-    data class UISettings(
-        val title: String,
-        val layout: List<*>,
-        val freeSlots: List<Int>? = null,
-        val defaultLayout: Int = 0,
-        val hidePlayerInventory: Boolean = false,
-        val minClickDelay: Int = -1,
-        val bindingCommands: List<String>? = null,
-        val bindingItems: List<ItemStack>? = null,
         val openCondition: List<String>? = null,
         val openActions: List<String>? = null,
         val openDeny: List<String>? = null,
@@ -146,10 +109,9 @@ object UIUtil {
         val icons: HashMap<String, ConfigurationSection>? = null
     )
 
-    data class Icon(
+    private data class Icon(
         val symbol: String,
         val item: ItemStack,
         val actions: HashMap<String, List<String>>? = null
     )
-
 }

@@ -3,38 +3,17 @@ Title: '菜单标题'
 
 # 菜单界面布局
 Layout:
-  - - '########C'
-    - '         '
-    - '         '
-    - '         '
-    - '########N'
-
-  - - '########C'
-    - '         '
-    - '         '
-    - '         '
-    - 'P########'
+  - '#########'
+  - '         '
+  - '         '
+  - '         '
+  - '########C'
 
 # 菜单选项设置
 Options:
   # 玩家可以操作的槽位
   Free-Slots:
     - 71~73
-  # 默认布局
-  Default-Layout: 0
-  # 隐藏玩家背包物品
-  Hide-Player-Inventory: false
-  # 最小点击间隔 (tick)
-  Min-Click-Delay: 20
-
-# 菜单绑定设置
-Bindings:
-  # 输入指令打开菜单
-  Commands:
-    - 'openExampleUI'
-  # 手持物品右键打开菜单
-  Items:
-    - 'AkariItem@Apple'
 
 # 事件设置
 Events:
@@ -71,20 +50,3 @@ Icons:
     Actions:
       All:
         - 'akariitem closeui'
-
-  N:
-    Display:
-      Material: 'LIME_STAINED_GLASS_PANE'
-      Name: '§a下一页 >>>'
-    Actions:
-      All:
-        - 'AkariItem@Page 1'
-        - 'sound BLOCK_CHEST_OPEN-1-2'
-  P:
-    Display:
-      Material: 'LIME_STAINED_GLASS_PANE'
-      Name: '§a<<< 上一页'
-    Actions:
-      All:
-        - 'AkariItem@Page 0'
-        - 'sound BLOCK_CHEST_OPEN-1-2'
