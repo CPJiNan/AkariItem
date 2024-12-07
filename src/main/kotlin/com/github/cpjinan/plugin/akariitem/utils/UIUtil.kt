@@ -56,7 +56,11 @@ object UIUtil {
             }
 
             onBuild(async = true) { player, _ ->
-                if (settings.openCondition?.evalKether(player) as Boolean) {
+                var matchCondition = true
+                settings.openCondition?.forEach {
+                    if (!(it.evalKether(player) as Boolean)) matchCondition = false
+                }
+                if (matchCondition) {
                     settings.openActions?.evalKether(player)
                 } else settings.openDeny?.evalKether(player)
             }
