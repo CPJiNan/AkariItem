@@ -59,22 +59,24 @@ object UIUtil {
         }
 
         return buildMenu<Chest>(settings.title) {
-            onBuild(async = false) { player, _ ->
-                settings.openActions?.evalKether(player)
-            }
-
             map(*settings.layout.toTypedArray())
+
+            handLocked(false)
 
             icons.forEach { icon ->
                 set(icon.symbol[0], icon.item) {
                     icon.actions?.forEach { (index, action) ->
-                        if (clickEvent().slot !in (settings.freeSlots ?: mutableListOf())) isCancelled = true
+                        if (clickEvent().slot in (settings.freeSlots ?: mutableListOf())) isCancelled = false
                         if (index.uppercase() == "ALL") action.evalKether(clicker)
                         else if (UIClickType.equals(clickEvent(), UIClickType.valueOf(index.uppercase()))) {
                             action.evalKether(clicker)
                         }
                     }
                 }
+            }
+
+            onBuild(async = false) { player, _ ->
+                settings.openActions?.evalKether(player)
             }
 
             onClose(once = true) { event ->
