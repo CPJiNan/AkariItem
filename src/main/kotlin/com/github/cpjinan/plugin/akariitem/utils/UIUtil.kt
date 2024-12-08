@@ -2,11 +2,13 @@ package com.github.cpjinan.plugin.akariitem.utils
 
 import com.github.cpjinan.plugin.akariitem.api.ItemAPI
 import com.github.cpjinan.plugin.akariitem.api.ui.UIClickType
+import com.github.cpjinan.plugin.akariitem.common.PluginConfig
 import com.github.cpjinan.plugin.akariitem.common.script.kether.Kether.evalKether
 import com.github.cpjinan.plugin.akariitem.utils.ConfigUtil.getConfigSections
 import org.bukkit.configuration.ConfigurationSection
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
+import org.bukkit.event.inventory.ClickType
 import org.bukkit.inventory.Inventory
 import org.bukkit.inventory.ItemStack
 import taboolib.module.ui.buildMenu
@@ -58,6 +60,8 @@ object UIUtil {
             }
         }
 
+        val freeSlots = settings.freeSlots ?: mutableListOf()
+
         return buildMenu<Chest>(settings.title) {
             map(*settings.layout.toTypedArray())
 
@@ -66,10 +70,36 @@ object UIUtil {
             icons.forEach { icon ->
                 set(icon.symbol[0], icon.item) {
                     icon.actions?.forEach { (index, action) ->
-                        if (clickEvent().slot in (settings.freeSlots ?: mutableListOf())) isCancelled = false
+                        if (clickEvent().slot in freeSlots) isCancelled = false
                         if (index.uppercase() == "ALL") action.evalKether(clicker)
                         else if (UIClickType.equals(clickEvent(), UIClickType.valueOf(index.uppercase()))) {
                             action.evalKether(clicker)
+                        }
+                    }
+                }
+            }
+
+            onClick { event ->
+                when {
+                    event.clickEventOrNull() != null -> {
+                        if (event.clickEvent().click == ClickType.DOUBLE_CLICK) event.isCancelled = true
+                        event.clickEvent().slot.let {
+                            if (it !in freeSlots) event.isCancelled = true
+                            if (PluginConfig.isEnabledDebug()) event.clicker.sendMessage("Type: clickEvent, Slot: $it")
+                        }
+                    }
+
+                    event.dragEventOrNull() != null -> {
+                        event.dragEvent().inventorySlots.let {
+                            if (!freeSlots.containsAll(it)) event.isCancelled = true
+                            if (PluginConfig.isEnabledDebug()) event.clicker.sendMessage("Type: dragEvent, Slot: $it")
+                        }
+                    }
+
+                    event.virtualEventOrNull() != null -> {
+                        event.virtualEvent().clickSlot.let {
+                            if (it !in freeSlots) event.isCancelled = true
+                            if (PluginConfig.isEnabledDebug()) event.clicker.sendMessage("Type: virtualEvent, Slot: $it")
                         }
                     }
                 }
@@ -114,7 +144,8 @@ object UIUtil {
             openActions = config.getStringList("Events.Open.Actions"),
             openDeny = config.getStringList("Events.Open.Deny"),
             closeActions = config.getStringList("Bindings.Close"),
-            icons = config.getConfigurationSection("Icons")?.getConfigSections()
+            icons = config.getConfigurationSection("Icons")?.getConfigSections(),
+            config = config
         )
     }
 
@@ -126,7 +157,8 @@ object UIUtil {
         val openActions: List<String>? = null,
         val openDeny: List<String>? = null,
         val closeActions: List<String>? = null,
-        val icons: HashMap<String, ConfigurationSection>? = null
+        val icons: HashMap<String, ConfigurationSection>? = null,
+        val config: YamlConfiguration
     )
 
     data class Icon(
