@@ -29,8 +29,8 @@ Events:
     # 无法打开菜单执行动作
     Deny:
       - |
-        title "§c§l缺少权限" by 15 20 15
-        subtitle "§c打开该菜单需要权限 示例权限.open.exampleUI"
+        title "§c§l缺少权限"
+        subtitle "§c打开该菜单需要权限 示例权限.open.exampleUI" by 15 20 15
   # 关闭菜单执行动作
   Close: [ ]
 
