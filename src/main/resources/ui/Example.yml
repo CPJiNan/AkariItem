@@ -23,30 +23,30 @@ Events:
     Condition:
       - 'permission 示例权限.open.exampleUI'
     # 打开菜单执行动作
-    Actions:
-      - 'sound BLOCK_CHEST_OPEN-1-0'
+    Actions: [ ]
     # 无法打开菜单执行动作
     Deny:
-      - 'sound ENTITY_ITEM_BREAK-1-0'
-      - 'title "&c&l缺少权限" by 15 20 15'
-      - 'subtitle "&c打开该菜单需要权限 示例权限.open.exampleUI" by 15 20 15'
+      - |
+        title "§c§l缺少权限" by 15 20 15
+        subtitle "§c打开该菜单需要权限 示例权限.open.exampleUI"
   # 关闭菜单执行动作
-  Close:
-    - 'sound BLOCK_CHEST_CLOSE-1-0'
+  Close: [ ]
 
 # 物品
 Icons:
   '#':
     Display:
       Type: 'GRAY_STAINED_GLASS_PANE'
+      Data: 7
       Display: '§8'
     Actions:
-      All: 'sound BLOCK_NOTE_BLOCK_PLING-1-2'
+      All: [ ]
 
   C:
     Display:
       Type: 'RED_STAINED_GLASS_PANE'
+      Data: 14
       Display: '§c关闭菜单'
     Actions:
       All:
-        - 'akariitem closeui'
+        - 'command "akariui close" as op'

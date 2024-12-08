@@ -18,22 +18,32 @@ object UIUtil {
         config: YamlConfiguration,
         onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
     ) {
-        val inventory = buildUIFromConfig(config, onFinish) ?: return
+        val inventory = buildUIFromConfig(this, config, onFinish) ?: return
         this.openInventory(inventory)
     }
 
     @JvmStatic
     fun buildUIFromConfig(
+        player: Player,
         config: YamlConfiguration,
         onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
     ): Inventory? {
         val settings = getUISettingsFromConfig(config) ?: return null
         val icons = mutableListOf<Icon>()
 
+        var matchCondition = true
+        settings.openCondition?.forEach {
+            if (!(it.evalKether(player) as Boolean)) matchCondition = false
+        }
+        if (!matchCondition) {
+            settings.openDeny?.evalKether(player)
+            return null
+        }
+
         settings.icons?.forEach { (index, section) ->
             val actions = hashMapOf<String, List<String>>()
-            section.getConfigSections().forEach { action ->
-                actions[action.key] = section.getStringList(action.key)
+            section.getConfigurationSection("Actions")!!.getKeys(false).forEach { type ->
+                actions[type] = section.getStringList("Actions.$type")
             }
             section.getConfigurationSection("Display")?.let { itemSection ->
                 ItemAPI.getItem(itemSection)?.let { item ->
@@ -49,28 +59,22 @@ object UIUtil {
         }
 
         return buildMenu<Chest>(settings.title) {
+            onBuild(async = false) { player, _ ->
+                settings.openActions?.evalKether(player)
+            }
+
             map(*settings.layout.toTypedArray())
 
             icons.forEach { icon ->
                 set(icon.symbol[0], icon.item) {
-                    if (settings.freeSlots != null && clickEvent().slot in settings.freeSlots) isCancelled = true
                     icon.actions?.forEach { (index, action) ->
-                        if (index == "ALL") action.evalKether(clicker)
+                        if (clickEvent().slot !in (settings.freeSlots ?: mutableListOf())) isCancelled = true
+                        if (index.uppercase() == "ALL") action.evalKether(clicker)
                         else if (UIClickType.equals(clickEvent(), UIClickType.valueOf(index.uppercase()))) {
                             action.evalKether(clicker)
                         }
                     }
                 }
-            }
-
-            onBuild(async = true) { player, _ ->
-                var matchCondition = true
-                settings.openCondition?.forEach {
-                    if (!(it.evalKether(player) as Boolean)) matchCondition = false
-                }
-                if (matchCondition) {
-                    settings.openActions?.evalKether(player)
-                } else settings.openDeny?.evalKether(player)
             }
 
             onClose(once = true) { event ->

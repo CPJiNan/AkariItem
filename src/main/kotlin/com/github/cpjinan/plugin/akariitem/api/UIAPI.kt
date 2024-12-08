@@ -5,7 +5,6 @@ import com.github.cpjinan.plugin.akariitem.utils.UIUtil.Icon
 import com.github.cpjinan.plugin.akariitem.utils.UIUtil.openUIFromConfig
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
-import org.bukkit.event.inventory.InventoryType
 import org.bukkit.inventory.Inventory
 import taboolib.module.ui.type.Chest
 
@@ -17,9 +16,10 @@ object UIAPI {
      */
     @JvmStatic
     fun buildUI(
+        player: Player,
         config: YamlConfiguration,
         onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
-    ): Inventory? = UIUtil.buildUIFromConfig(config, onFinish)
+    ): Inventory? = UIUtil.buildUIFromConfig(player, config, onFinish)
 
     /**
      * 为玩家打开指定 UI 界面
@@ -32,17 +32,5 @@ object UIAPI {
         onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
     ) {
         this.openUIFromConfig(config, onFinish)
-    }
-
-    /**
-     * 为玩家关闭当前 UI 界面
-     * @param type 要关闭的 UI 界面种类 (默认为 null)
-     * @author CPJiNan
-     */
-    @JvmStatic
-    fun Player.closeUI(type: InventoryType? = null) {
-        player?.openInventory?.run {
-            if (type == null || this.type == type) player.closeInventory()
-        }
     }
 }
