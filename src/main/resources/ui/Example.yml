@@ -14,7 +14,8 @@ Layout:
 Options:
   # 玩家可以操作的槽位 (Debug 模式下点击槽位会显示其信息)
   Free-Slots:
-    - 0~8
+    - '9~17'
+    - '18'
 
 # 事件设置
 Events:

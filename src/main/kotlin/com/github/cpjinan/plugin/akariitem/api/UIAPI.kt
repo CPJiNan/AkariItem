@@ -16,10 +16,9 @@ object UIAPI {
      */
     @JvmStatic
     fun buildUI(
-        player: Player,
         config: YamlConfiguration,
         onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
-    ): Inventory? = UIUtil.buildUIFromConfig(player, config, onFinish)
+    ): Inventory? = UIUtil.buildUIFromConfig(config, onFinish)
 
     /**
      * 为玩家打开指定 UI 界面

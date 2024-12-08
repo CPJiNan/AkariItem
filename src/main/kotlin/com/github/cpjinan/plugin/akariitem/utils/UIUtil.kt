@@ -20,27 +20,28 @@ object UIUtil {
         config: YamlConfiguration,
         onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
     ) {
-        val inventory = buildUIFromConfig(this, config, onFinish) ?: return
-        this.openInventory(inventory)
+        val settings = getUISettingsFromConfig(config) ?: return
+        var matchCondition = true
+
+        settings.openCondition?.forEach {
+            if (!(it.evalKether(this) as Boolean)) matchCondition = false
+        }
+
+        if (matchCondition) {
+            val inventory = buildUIFromConfig(config, onFinish) ?: return
+            this.openInventory(inventory)
+        } else {
+            settings.openDeny?.evalKether(this)
+        }
     }
 
     @JvmStatic
     fun buildUIFromConfig(
-        player: Player,
         config: YamlConfiguration,
         onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
     ): Inventory? {
         val settings = getUISettingsFromConfig(config) ?: return null
         val icons = mutableListOf<Icon>()
-
-        var matchCondition = true
-        settings.openCondition?.forEach {
-            if (!(it.evalKether(player) as Boolean)) matchCondition = false
-        }
-        if (!matchCondition) {
-            settings.openDeny?.evalKether(player)
-            return null
-        }
 
         settings.icons?.forEach { (index, section) ->
             val actions = hashMapOf<String, List<String>>()
@@ -83,14 +84,14 @@ object UIUtil {
                 when {
                     event.clickEventOrNull() != null -> {
                         if (event.clickEvent().click == ClickType.DOUBLE_CLICK) event.isCancelled = true
-                        event.clickEvent().slot.let {
+                        event.clickEvent().rawSlot.let {
                             if (it !in freeSlots) event.isCancelled = true
                             if (PluginConfig.isEnabledDebug()) event.clicker.sendMessage("Type: clickEvent, Slot: $it")
                         }
                     }
 
                     event.dragEventOrNull() != null -> {
-                        event.dragEvent().inventorySlots.let {
+                        event.dragEvent().rawSlots.let {
                             if (!freeSlots.containsAll(it)) event.isCancelled = true
                             if (PluginConfig.isEnabledDebug()) event.clicker.sendMessage("Type: dragEvent, Slot: $it")
                         }
