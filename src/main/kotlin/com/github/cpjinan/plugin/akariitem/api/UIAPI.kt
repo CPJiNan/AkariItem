@@ -2,6 +2,7 @@ package com.github.cpjinan.plugin.akariitem.api
 
 import com.github.cpjinan.plugin.akariitem.utils.UIUtil
 import com.github.cpjinan.plugin.akariitem.utils.UIUtil.Icon
+import com.github.cpjinan.plugin.akariitem.utils.UIUtil.UISettings
 import com.github.cpjinan.plugin.akariitem.utils.UIUtil.openUIFromConfig
 import org.bukkit.configuration.file.YamlConfiguration
 import org.bukkit.entity.Player
@@ -17,7 +18,7 @@ object UIAPI {
     @JvmStatic
     fun buildUI(
         config: YamlConfiguration,
-        onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
+        onFinish: (ui: Chest, settings: UISettings, icons: MutableList<Icon>) -> Unit = { _: Chest, _: UISettings, _: MutableList<Icon> -> }
     ): Inventory? = UIUtil.buildUIFromConfig(config, onFinish)
 
     /**
@@ -28,7 +29,7 @@ object UIAPI {
     @JvmStatic
     fun Player.openUI(
         config: YamlConfiguration,
-        onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
+        onFinish: (ui: Chest, settings: UISettings, icons: MutableList<Icon>) -> Unit = { _: Chest, _: UISettings, _: MutableList<Icon> -> }
     ) {
         this.openUIFromConfig(config, onFinish)
     }

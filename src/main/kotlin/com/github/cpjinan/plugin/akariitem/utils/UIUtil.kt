@@ -18,7 +18,7 @@ object UIUtil {
     @JvmStatic
     fun Player.openUIFromConfig(
         config: YamlConfiguration,
-        onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
+        onFinish: (ui: Chest, settings: UISettings, icons: MutableList<Icon>) -> Unit = { _: Chest, _: UISettings, _: MutableList<Icon> -> }
     ) {
         val settings = getUISettingsFromConfig(config) ?: return
         var matchCondition = true
@@ -38,7 +38,7 @@ object UIUtil {
     @JvmStatic
     fun buildUIFromConfig(
         config: YamlConfiguration,
-        onFinish: (ui: Chest, icons: MutableList<Icon>) -> Unit = { _: Chest, _: MutableList<Icon> -> }
+        onFinish: (ui: Chest, settings: UISettings, icons: MutableList<Icon>) -> Unit = { _: Chest, _: UISettings, _: MutableList<Icon> -> }
     ): Inventory? {
         val settings = getUISettingsFromConfig(config) ?: return null
         val icons = mutableListOf<Icon>()
@@ -116,7 +116,7 @@ object UIUtil {
                 }
             }
 
-            onFinish(this, icons)
+            onFinish(this, settings, icons)
         }
     }
 
