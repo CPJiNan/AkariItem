@@ -107,7 +107,18 @@ object UIUtil {
             }
 
             onBuild(async = false) { player, _ ->
-                settings.openActions?.evalKether(player)
+                var matchCondition = true
+
+                settings.openCondition?.forEach {
+                    if (!(it.evalKether(this) as Boolean)) matchCondition = false
+                }
+
+                if (matchCondition) {
+                    settings.openActions?.evalKether(player)
+                } else {
+                    player.closeInventory()
+                    settings.openDeny?.evalKether(this)
+                }
             }
 
             onClose(once = true) { event ->
